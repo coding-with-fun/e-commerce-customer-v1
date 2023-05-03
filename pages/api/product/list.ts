@@ -1,5 +1,6 @@
 import prisma from '@/libs/prisma';
 import response from '@/libs/response';
+import { product } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -8,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             throw new Error('API not found!');
         }
 
-        const products = await prisma.product.findMany({
+        const products: productListResponse[] = await prisma.product.findMany({
             include: {
                 seller: {
                     select: {
@@ -36,3 +37,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default handler;
+
+export type productListResponse = product & {
+    seller: {
+        id: number;
+        name: string;
+    } | null;
+    favoriteBy: {
+        id: number;
+    }[];
+};
