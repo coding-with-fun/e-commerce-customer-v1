@@ -1,4 +1,6 @@
+import prisma from '@/libs/prisma';
 import env from '@/utils/env';
+import _ from 'lodash';
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -8,12 +10,23 @@ export const authOptions: NextAuthOptions = {
             name: 'Credentials',
             credentials: {},
             authorize: async (credentials) => {
+                const email = _.get(credentials, 'email');
+                if (!email) {
+                    throw new Error('Email not found.');
+                }
+
+                const customer = await prisma.customer.findFirst({
+                    where: {
+                        email,
+                    },
+                });
+                if (!customer) {
+                    throw new Error('Customer not found.');
+                }
+
                 return {
-                    id: '1',
-                    email: 'dev@harrsh.com',
-                    name: 'Harrsh Patel',
-                    profilePicture: '',
-                    contactNumber: '+919099976321',
+                    ...customer,
+                    id: `${customer.id}`,
                 };
             },
         }),
@@ -51,9 +64,8 @@ export const authOptions: NextAuthOptions = {
                 user: {
                     ...session.user,
                     id: token.id,
-                    // url: token.url,
-                    // contactNumber: token.contactNumber,
-                    // customerID: token.customerID,
+                    profilePicture: token.profilePicture,
+                    contactNumber: token.contactNumber,
                     name: token.name,
                     email: token.email,
                 },
