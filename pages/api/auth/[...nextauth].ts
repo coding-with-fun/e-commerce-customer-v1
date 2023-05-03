@@ -57,8 +57,6 @@ export const authOptions: NextAuthOptions = {
         },
 
         async session({ session, token }) {
-            console.log(token);
-
             return {
                 ...session,
                 user: {

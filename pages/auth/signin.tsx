@@ -37,7 +37,6 @@ const SignIn = () => {
                 password: values.password,
                 redirect: false,
             })) as SignInResponse;
-            console.log(response);
 
             if (!response.ok) {
                 toast(response.error || 'Something went wrong.');

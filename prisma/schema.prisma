@@ -11,16 +11,57 @@ datasource db {
 }
 
 model customer {
-  id             Int      @id @default(autoincrement())
-  name           String   @db.VarChar(255)
-  profilePicture String?
-  email          String   @unique
-  password       String
-  contactNumber  String   @unique
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(255)
+  profilePicture  String?
+  email           String    @unique
+  password        String
+  contactNumber   String    @unique
   // Flags
-  isActive       Boolean  @default(true)
-  isDeleted      Boolean  @default(false)
+  isActive        Boolean   @default(true)
+  isDeleted       Boolean   @default(false)
   // Dates
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  // Relationship
+  favoriteProduct product[]
+}
+
+model seller {
+  id             Int       @id @default(autoincrement())
+  name           String    @db.VarChar(255)
+  profilePicture String?
+  email          String    @unique
+  password       String
+  contactNumber  String    @unique
+  // Flags
+  isActive       Boolean   @default(true)
+  isDeleted      Boolean   @default(false)
+  // Dates
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  // Relationship
+  products       product[]
+}
+
+model product {
+  id           Int        @id @default(autoincrement())
+  title        String     @db.VarChar(255)
+  description  String     @db.LongText
+  price        Int
+  quantity     Int
+  ratings      Float
+  totalRatings Int
+  coverImage   String
+  // Flags
+  isActive     Boolean    @default(true)
+  isDeleted    Boolean    @default(false)
+  // Dates
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  // Relationship
+  favoriteBy   customer[]
+  // -------------------------------
+  seller       seller?    @relation(fields: [sellerId], references: [id])
+  sellerId     Int?
 }
