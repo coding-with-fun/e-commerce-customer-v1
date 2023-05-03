@@ -12,7 +12,8 @@ export const authOptions: NextAuthOptions = {
                     id: '1',
                     email: 'dev@harrsh.com',
                     name: 'Harrsh Patel',
-                    image: '',
+                    profilePicture: '',
+                    contactNumber: '+919099976321',
                 };
             },
         }),
@@ -43,16 +44,18 @@ export const authOptions: NextAuthOptions = {
         },
 
         async session({ session, token }) {
+            console.log(token);
+
             return {
                 ...session,
                 user: {
                     ...session.user,
-                    // _id: token._id,
+                    id: token.id,
                     // url: token.url,
                     // contactNumber: token.contactNumber,
                     // customerID: token.customerID,
-                    // name: token.name,
-                    // email: token.email,
+                    name: token.name,
+                    email: token.email,
                 },
             };
         },

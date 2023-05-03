@@ -2,20 +2,20 @@ import { Box, Typography } from '@mui/material';
 import Head from 'next/head';
 import React, { Fragment } from 'react';
 
-const Home = () => {
+const SignUp = () => {
     return (
         <Fragment>
             <Head>
-                <title>Home</title>
+                <title>Sign Up</title>
             </Head>
 
             <Box>
                 <Typography component="h1" variant="h5">
-                    Home
+                    Sign Up
                 </Typography>
             </Box>
         </Fragment>
     );
 };
 
-export default Home;
+export default SignUp;

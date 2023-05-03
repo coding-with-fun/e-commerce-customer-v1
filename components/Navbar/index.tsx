@@ -35,6 +35,7 @@ const Navbar = () => {
             <Container
                 sx={{
                     maxWidth: '100% !important',
+                    userSelect: 'none',
                 }}
             >
                 <Toolbar disableGutters>
