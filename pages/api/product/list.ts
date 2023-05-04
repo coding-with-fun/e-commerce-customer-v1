@@ -23,6 +23,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                     },
                 },
             },
+            orderBy: {
+                createdAt: 'desc',
+            },
         });
 
         return response(res, {
@@ -43,7 +46,8 @@ export type productListResponse = product & {
         id: number;
         name: string;
     } | null;
-    favoriteBy: {
+    favoriteBy?: {
         id: number;
     }[];
+    isFavorite?: boolean;
 };

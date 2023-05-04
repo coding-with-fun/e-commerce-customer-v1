@@ -1,3 +1,4 @@
+import useSWRMutation from 'swr/mutation';
 import { productListResponse } from '@/pages/api/product/list';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -11,10 +12,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import axios from 'axios';
+import { productToggleFavoriteSchemaType } from '@/pages/api/product/toggleFavorite';
 
 const Product = (props: IProps) => {
     const { product } = props;
     const { push } = useRouter();
+
+    const { data, trigger } = useSWRMutation(
+        '/api/product/toggleFavorite',
+        fetcher
+    );
 
     const [isImageLoading, setIsImageLoading] = useState(true);
 
@@ -68,18 +78,37 @@ const Product = (props: IProps) => {
                 />
             </Box>
 
-            <Link href={`product/${product.id}`} className="mt-4">
-                <Typography className="product-title font-medium hover:underline">
-                    {product.title}
-                </Typography>
-            </Link>
+            <Box className="flex items-start mt-4">
+                <Box className="flex flex-col">
+                    <Link href={`product/${product.id}`}>
+                        <Typography className="product-title font-medium hover:underline">
+                            {product.title}
+                        </Typography>
+                    </Link>
 
-            <Typography
-                variant="body2"
-                className="mt-1 mb-4 text-gray-400 font-extralight"
-            >
-                by {product.seller?.name}
-            </Typography>
+                    <Typography
+                        variant="body2"
+                        className="mt-1 mb-4 text-gray-400 font-extralight"
+                    >
+                        by {product.seller?.name}
+                    </Typography>
+                </Box>
+
+                <Box
+                    className="mt-1 text-red-600 flex justify-center items-center"
+                    onClick={() => {
+                        trigger({
+                            id: product.id,
+                        });
+                    }}
+                >
+                    {product.isFavorite ? (
+                        <FavoriteOutlinedIcon />
+                    ) : (
+                        <FavoriteBorderOutlinedIcon />
+                    )}
+                </Box>
+            </Box>
 
             <Box
                 sx={{
@@ -151,3 +180,19 @@ export default Product;
 interface IProps {
     product: productListResponse;
 }
+
+const fetcher = async (
+    url: string,
+    {
+        arg,
+    }: {
+        arg: {
+            id: number;
+        };
+    }
+) => {
+    const response = await axios.post(url, {
+        id: arg.id,
+    });
+    return response.data;
+};

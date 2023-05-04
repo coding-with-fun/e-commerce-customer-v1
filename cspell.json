@@ -4,8 +4,10 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "extralight",
         "Formik",
         "inputerror",
+        "nextauth",
         "persistor",
         "reduxjs"
     ],
