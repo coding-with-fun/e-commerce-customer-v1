@@ -79,7 +79,7 @@ const Product = (props: IProps) => {
                 />
             </Box>
 
-            <Box className="flex items-start mt-4">
+            <Box className="flex items-start mt-4 gap-4">
                 <Box className="flex flex-col">
                     <Link href={`product/${product.id}`}>
                         <Typography className="product-title font-medium hover:underline">

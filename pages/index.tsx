@@ -6,15 +6,57 @@ import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
 import Head from 'next/head';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { authOptions } from './api/auth/[...nextauth]';
 import { productListResponse } from './api/product/list';
+import { useSession } from 'next-auth/react';
+import { useAppSelector } from '@/hooks/redux';
+import { useDispatch } from 'react-redux';
+import { setProducts } from '@/redux/slice/products.slice';
 
 const Home = ({ data }: { data: productListApiResponse }) => {
-    const { message, products, success } = data;
+    const { data: session } = useSession();
+    const products = useAppSelector((state) => state.products.products);
+    const dispatch = useDispatch();
+    const { message, products: resProducts, success } = data;
+
+    useEffect(() => {
+        const data = [];
+
+        for (let product of resProducts) {
+            const productData = {
+                ...product,
+            };
+
+            const isFavorite =
+                session && productData.favoriteBy
+                    ? productData.favoriteBy.some(
+                          (el) => el.id === +session.user.id
+                      )
+                    : false;
+
+            delete productData.favoriteBy;
+            data.push({
+                ...productData,
+                isFavorite,
+            });
+        }
+
+        dispatch(
+            setProducts({
+                products: data,
+            })
+        );
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [resProducts]);
 
     if (!success) {
         toast(message);
+        return <NoProduct />;
+    }
+
+    if (!products.length) {
         return <NoProduct />;
     }
 
@@ -51,37 +93,26 @@ type productListApiResponse = {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const res: productListApiResponse = await axiosInstance.get(
-        'http://localhost:3000/api/product/list'
-    );
+    try {
+        const res: productListApiResponse = await axiosInstance.get(
+            'http://localhost:3000/api/product/list'
+        );
 
-    const session = await getServerSession(
-        context.req,
-        context.res,
-        authOptions
-    );
+        console.log(res);
 
-    const products = [];
-    for (let product of res.products) {
-        const isFavorite =
-            session && product.favoriteBy
-                ? product.favoriteBy.some((el) => el.id === +session.user.id)
-                : false;
-
-        delete product.favoriteBy;
-        products.push({
-            ...product,
-            isFavorite,
-        });
-    }
-
-    return {
-        props: {
-            data: {
-                ...res,
-                products,
+        return {
+            props: {
+                data: res,
             },
-            session,
-        },
-    };
+        };
+    } catch (error: any) {
+        return {
+            props: {
+                data: {
+                    ...error,
+                    products: [],
+                },
+            },
+        };
+    }
 };
