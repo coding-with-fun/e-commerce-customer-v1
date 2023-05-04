@@ -28,7 +28,7 @@ const ProductsSkeleton = () => {
                             minWidth: '337px',
                         }}
                     >
-                        <Skeleton variant="rounded" width={303} height={160} />
+                        <Skeleton variant="rounded" height={160} />
 
                         <Skeleton
                             variant="text"

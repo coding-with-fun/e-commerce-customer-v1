@@ -1,3 +1,4 @@
+import { productListResponse } from '@/pages/api/product/list';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Box from '@mui/material/Box';
@@ -6,17 +7,23 @@ import Paper from '@mui/material/Paper';
 import Rating from '@mui/material/Rating';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
-import _ from 'lodash';
-import { productListResponse } from '@/pages/api/product/list';
-import React from 'react';
-import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const Product = (props: IProps) => {
     const { product } = props;
     console.log(product);
 
     const [isImageLoading, setIsImageLoading] = useState(true);
+
+    useEffect(() => {
+        const loadImage = setTimeout(() => {
+            setIsImageLoading(false);
+        }, 2000);
+
+        return () => clearTimeout(loadImage);
+    }, []);
 
     return (
         <Paper
@@ -27,41 +34,11 @@ const Product = (props: IProps) => {
                 display: 'flex',
                 justifyContent: 'center',
                 flexDirection: 'column',
-                cursor: 'pointer',
                 minHeight: '266px',
                 minWidth: '337px',
+                userSelect: 'none',
             }}
         >
-            <Box
-                sx={{
-                    height: '10rem',
-                    width: '100%',
-                    display: isImageLoading ? 'none' : 'block',
-                }}
-            >
-                <img
-                    src={product.coverImage}
-                    alt={product.title}
-                    style={{
-                        height: '100%',
-                        width: '100%',
-                        objectFit: 'contain',
-                    }}
-                    onLoad={() => {
-                        setIsImageLoading(false);
-                    }}
-                />
-            </Box>
-
-            <Skeleton
-                variant="rounded"
-                width={303}
-                height={160}
-                sx={{
-                    display: isImageLoading ? 'block' : 'none',
-                }}
-            />
-
             <Box className="relative h-40">
                 <Image
                     priority
@@ -86,14 +63,16 @@ const Product = (props: IProps) => {
                 />
             </Box>
 
-            <Typography
-                className="product-title"
-                sx={{
-                    marginTop: '1rem',
-                }}
-            >
-                {product.title}
-            </Typography>
+            <Link href={`product/${product.id}`}>
+                <Typography
+                    className="product-title"
+                    sx={{
+                        marginTop: '1rem',
+                    }}
+                >
+                    {product.title}
+                </Typography>
+            </Link>
             <Typography variant="body2">by {product.seller?.name}</Typography>
 
             <Box
@@ -147,7 +126,6 @@ const Product = (props: IProps) => {
                     <Typography
                         sx={{
                             cursor: 'text',
-                            userSelect: 'none',
                         }}
                     >
                         0

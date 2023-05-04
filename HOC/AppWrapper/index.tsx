@@ -19,10 +19,17 @@ const AppWrapper = ({ children }: IProps) => {
     }, [session]);
 
     useEffect(() => {
+        let startTimer: NodeJS.Timeout | null = null;
+
         const start = () => {
-            setLoading(true);
+            startTimer = setTimeout(() => {
+                setLoading(true);
+            }, 1000);
         };
         const end = () => {
+            if (startTimer) {
+                clearTimeout(startTimer);
+            }
             setLoading(false);
         };
 
@@ -34,6 +41,9 @@ const AppWrapper = ({ children }: IProps) => {
             events.off('routeChangeStart', start);
             events.off('routeChangeComplete', end);
             events.off('routeChangeError', end);
+            if (startTimer) {
+                clearTimeout(startTimer);
+            }
         };
     }, [events]);
 

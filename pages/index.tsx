@@ -1,14 +1,13 @@
-import useSWR from 'swr';
-import { Box, Typography } from '@mui/material';
+import NoProduct from '@/components/Home/NoProduct';
+import Product from '@/components/Home/Product';
+import ProductsSkeleton from '@/components/Home/ProductsSkeleton';
+import toast from '@/libs/toast';
+import { Box } from '@mui/material';
 import axios from 'axios';
 import Head from 'next/head';
-import React, { Fragment } from 'react';
-import toast from '@/libs/toast';
-import ProductsSkeleton from '@/components/Home/ProductsSkeleton';
-import { product } from '@prisma/client';
+import { Fragment } from 'react';
+import useSWR from 'swr';
 import { productListResponse } from './api/product/list';
-import Product from '@/components/Home/Product';
-import NoProduct from '@/components/Home/NoProduct';
 
 const Home = () => {
     const {
@@ -65,4 +64,17 @@ type productListApiResponse = {
     success: boolean;
     message: string;
     products: productListResponse[];
+};
+
+export const getServerSideProps = async () => {
+    const res = await fetch('http://localhost:3000/api/product/list');
+    const data: productListApiResponse = await res.json();
+
+    console.log(data);
+
+    return {
+        props: {
+            data,
+        },
+    };
 };
