@@ -9,11 +9,12 @@ import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const Product = (props: IProps) => {
     const { product } = props;
-    console.log(product);
+    const { push } = useRouter();
 
     const [isImageLoading, setIsImageLoading] = useState(true);
 
@@ -48,7 +49,11 @@ const Product = (props: IProps) => {
                     sizes="160px"
                     style={{
                         objectFit: 'contain',
+                        cursor: 'pointer',
                         display: isImageLoading ? 'none' : 'block',
+                    }}
+                    onClick={() => {
+                        push(`product/${product.id}`);
                     }}
                 />
 
@@ -63,17 +68,18 @@ const Product = (props: IProps) => {
                 />
             </Box>
 
-            <Link href={`product/${product.id}`}>
-                <Typography
-                    className="product-title"
-                    sx={{
-                        marginTop: '1rem',
-                    }}
-                >
+            <Link href={`product/${product.id}`} className="mt-4">
+                <Typography className="product-title font-medium hover:underline">
                     {product.title}
                 </Typography>
             </Link>
-            <Typography variant="body2">by {product.seller?.name}</Typography>
+
+            <Typography
+                variant="body2"
+                className="mt-1 mb-4 text-gray-400 font-extralight"
+            >
+                by {product.seller?.name}
+            </Typography>
 
             <Box
                 sx={{
