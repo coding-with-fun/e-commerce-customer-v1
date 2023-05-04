@@ -1,13 +1,11 @@
 import PasswordInput from '@/components/PasswordInput';
 import unauthenticatedPage from '@/hooks/unauthenticatedPage';
 import toast from '@/libs/toast';
-import {
-    Box,
-    Button,
-    CircularProgress,
-    TextField,
-    Typography,
-} from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import { SignInResponse, signIn } from 'next-auth/react';
 import Head from 'next/head';

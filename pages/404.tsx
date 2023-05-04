@@ -1,6 +1,7 @@
-import { Box, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import Head from 'next/head';
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
 
 const PageNotFound = () => {
     return (
