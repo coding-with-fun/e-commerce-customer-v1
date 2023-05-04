@@ -1,6 +1,7 @@
 import axiosInstance from '@/libs/interceptor';
 import toast from '@/libs/toast';
 import { productListResponse } from '@/pages/api/product/list';
+import { toggleFavoriteProduct } from '@/redux/slice/products.slice';
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
@@ -15,11 +16,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import useSWRMutation from 'swr/mutation';
 
 const Product = (props: IProps) => {
     const { product } = props;
     const { push } = useRouter();
+    const dispatch = useDispatch();
 
     const { trigger } = useSWRMutation('/api/product/toggleFavorite', fetcher, {
         onError(err) {
@@ -98,6 +101,11 @@ const Product = (props: IProps) => {
                 <Box
                     className="mt-1 text-red-600 flex justify-center items-center cursor-pointer"
                     onClick={() => {
+                        dispatch(
+                            toggleFavoriteProduct({
+                                id: product.id,
+                            })
+                        );
                         trigger({
                             id: product.id,
                         });
