@@ -1,7 +1,16 @@
-import React from 'react';
+import Head from 'next/head';
+import React, { Fragment } from 'react';
 
 const NoProduct = () => {
-    return <div>No product found</div>;
+    return (
+        <Fragment>
+            <Head>
+                <title>No product found</title>
+            </Head>
+
+            <div>No product found</div>
+        </Fragment>
+    );
 };
 
 export default NoProduct;

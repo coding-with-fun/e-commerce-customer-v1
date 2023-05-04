@@ -29,8 +29,9 @@ const App = ({
                         <ThemeProvider theme={theme}>
                             <CssBaseline />
 
+                            <Navbar />
+
                             <AppWrapper>
-                                <Navbar />
                                 <ToastContainer
                                     position="top-right"
                                     autoClose={5000}

@@ -1,34 +1,16 @@
-import NoProduct from '@/components/Home/NoProduct';
-import Product from '@/components/Home/Product';
-import ProductsSkeleton from '@/components/Home/ProductsSkeleton';
-import toast from '@/libs/toast';
-import { Box } from '@mui/material';
 import axios from 'axios';
+import Product from '@/components/Home/Product';
+import { Box } from '@mui/material';
 import Head from 'next/head';
 import { Fragment } from 'react';
-import useSWR from 'swr';
 import { productListResponse } from './api/product/list';
+import toast from '@/libs/toast';
+import NoProduct from '@/components/Home/NoProduct';
 
-const Home = () => {
-    const {
-        data,
-        isLoading,
-    }: {
-        data: productListApiResponse | undefined;
-        isLoading: boolean;
-    } = useSWR('/api/product/list', productsFetcher);
-
-    if (!data || (data.products && !data.products.length)) {
-        if (!isLoading) {
-            return <NoProduct />;
-        } else {
-            return <ProductsSkeleton />;
-        }
-    }
-
+const Home = ({ data }: { data: productListApiResponse }) => {
     const { message, products, success } = data;
 
-    if (!isLoading && !success) {
+    if (!success) {
         toast(message);
         return <NoProduct />;
     }
@@ -46,6 +28,7 @@ const Home = () => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
                     gap: '1rem',
+                    marginX: 'auto',
                 }}
             >
                 {products.map((product) => {
@@ -58,8 +41,6 @@ const Home = () => {
 
 export default Home;
 
-const productsFetcher = (url: string) => axios.get(url).then((res) => res.data);
-
 type productListApiResponse = {
     success: boolean;
     message: string;
@@ -67,10 +48,8 @@ type productListApiResponse = {
 };
 
 export const getServerSideProps = async () => {
-    const res = await fetch('http://localhost:3000/api/product/list');
-    const data: productListApiResponse = await res.json();
-
-    console.log(data);
+    const res = await axios.get('http://localhost:3000/api/product/list');
+    const data: productListApiResponse = res.data;
 
     return {
         props: {

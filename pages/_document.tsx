@@ -16,7 +16,7 @@ const CustomDocument = () => {
                 <meta name="emotion-insertion-point" content="" />
             </Head>
 
-            <body>
+            <body className="hide-scrollbar">
                 <Main />
                 <NextScript />
             </body>
