@@ -95,7 +95,7 @@ const Product = (props: IProps) => {
                 </Box>
 
                 <Box
-                    className="mt-1 text-red-600 flex justify-center items-center"
+                    className="mt-1 text-red-600 flex justify-center items-center cursor-pointer"
                     onClick={() => {
                         trigger({
                             id: product.id,
