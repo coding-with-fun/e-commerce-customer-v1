@@ -1,14 +1,14 @@
-import axios from 'axios';
+import NoProduct from '@/components/Home/NoProduct';
 import Product from '@/components/Home/Product';
+import axiosInstance from '@/libs/interceptor';
+import toast from '@/libs/toast';
 import { Box } from '@mui/material';
+import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth';
 import Head from 'next/head';
 import { Fragment } from 'react';
-import { productListResponse } from './api/product/list';
-import toast from '@/libs/toast';
-import NoProduct from '@/components/Home/NoProduct';
-import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]';
-import { GetServerSideProps } from 'next';
+import { productListResponse } from './api/product/list';
 
 const Home = ({ data }: { data: productListApiResponse }) => {
     const { message, products, success } = data;
@@ -51,8 +51,9 @@ type productListApiResponse = {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const res = await axios.get('http://localhost:3000/api/product/list');
-    const data: productListApiResponse = res.data;
+    const res: productListApiResponse = await axiosInstance.get(
+        'http://localhost:3000/api/product/list'
+    );
 
     const session = await getServerSession(
         context.req,
@@ -61,7 +62,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     );
 
     const products = [];
-    for (let product of data.products) {
+    for (let product of res.products) {
         const isFavorite =
             session && product.favoriteBy
                 ? product.favoriteBy.some((el) => el.id === +session.user.id)
@@ -77,7 +78,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
         props: {
             data: {
-                ...data,
+                ...res,
                 products,
             },
             session,
