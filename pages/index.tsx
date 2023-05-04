@@ -18,8 +18,6 @@ const Home = ({ data }: { data: productListApiResponse }) => {
         return <NoProduct />;
     }
 
-    console.log(products);
-
     return (
         <Fragment>
             <Head>
@@ -61,7 +59,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         context.res,
         authOptions
     );
-    console.log(session);
 
     const products = [];
     for (let product of data.products) {
@@ -76,8 +73,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             isFavorite,
         });
     }
-
-    console.log(products);
 
     return {
         props: {

@@ -22,11 +22,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const session = await getServerSession(req, res, authOptions);
         if (!session) {
+            res.statusCode = 401;
             throw new Error('You are not authenticated.');
         }
         const userID = +session.user.id;
-
-        console.log(session);
 
         const customer = await prisma.customer.findFirst({
             where: {
@@ -37,6 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             },
         });
         if (!customer) {
+            res.statusCode = 400;
             throw new Error('Customer not found with the given ID.');
         }
 

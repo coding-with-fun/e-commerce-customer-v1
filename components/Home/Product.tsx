@@ -1,6 +1,9 @@
-import useSWRMutation from 'swr/mutation';
+import axiosInstance from '@/libs/interceptor';
+import toast from '@/libs/toast';
 import { productListResponse } from '@/pages/api/product/list';
 import AddIcon from '@mui/icons-material/Add';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -12,19 +15,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
-import axios from 'axios';
-import { productToggleFavoriteSchemaType } from '@/pages/api/product/toggleFavorite';
+import useSWRMutation from 'swr/mutation';
 
 const Product = (props: IProps) => {
     const { product } = props;
     const { push } = useRouter();
 
-    const { data, trigger } = useSWRMutation(
-        '/api/product/toggleFavorite',
-        fetcher
-    );
+    const { trigger } = useSWRMutation('/api/product/toggleFavorite', fetcher, {
+        onError(err) {
+            toast(err.message);
+        },
+    });
 
     const [isImageLoading, setIsImageLoading] = useState(true);
 
@@ -191,7 +192,7 @@ const fetcher = async (
         };
     }
 ) => {
-    const response = await axios.post(url, {
+    const response = await axiosInstance.post(url, {
         id: arg.id,
     });
     return response.data;
