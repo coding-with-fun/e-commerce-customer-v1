@@ -49,7 +49,7 @@ const Home = ({ data }: { data: productListApiResponse }) => {
         );
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [resProducts]);
+    }, [resProducts, session]);
 
     if (!success) {
         toast(message);
