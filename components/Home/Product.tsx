@@ -1,12 +1,9 @@
 import Modal from '@/HOC/Modal';
+import { useAppSelector } from '@/hooks/redux';
 import axiosInstance from '@/libs/interceptor';
 import toast from '@/libs/toast';
 import { productListResponse } from '@/pages/api/product/list';
-import {
-    addProductToCart,
-    removeProductFromCart,
-    toggleFavoriteProduct,
-} from '@/redux/slice/products.slice';
+import { toggleFavoriteProduct } from '@/redux/slice/products.slice';
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
@@ -18,6 +15,7 @@ import Paper from '@mui/material/Paper';
 import Rating from '@mui/material/Rating';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -25,16 +23,17 @@ import { Fragment, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useSWRMutation from 'swr/mutation';
 import SignInAlert from './SignInAlert';
-import { useSession } from 'next-auth/react';
-import { useAppSelector } from '@/hooks/redux';
-import _ from 'lodash';
+import {
+    addProductToCart,
+    removeProductFromCart,
+} from '@/redux/slice/cart.slice';
 
 const Product = (props: IProps) => {
     const { product } = props;
     const { push } = useRouter();
     const { status } = useSession();
     const dispatch = useDispatch();
-    const cartData = useAppSelector((state) => state.products.cartData);
+    const { cartData, updatingCart } = useAppSelector((state) => state.cart);
 
     const { trigger, isMutating } = useSWRMutation(
         '/api/product/toggleFavorite',
@@ -232,6 +231,7 @@ const Product = (props: IProps) => {
                                     })
                                 );
                             }}
+                            disabled={updatingCart}
                         >
                             <RemoveIcon />
                         </IconButton>
@@ -241,7 +241,7 @@ const Product = (props: IProps) => {
                                 cursor: 'text',
                             }}
                         >
-                            {_.get(cartData[product.id], 'inCart', 0)}
+                            {cartData[product.id] ?? 0}
                         </Typography>
 
                         <IconButton
@@ -250,9 +250,11 @@ const Product = (props: IProps) => {
                                 dispatch(
                                     addProductToCart({
                                         productID: product.id,
+                                        productQuantity: product.quantity,
                                     })
                                 );
                             }}
+                            disabled={updatingCart}
                         >
                             <AddIcon />
                         </IconButton>
