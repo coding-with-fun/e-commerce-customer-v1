@@ -8,7 +8,7 @@ const AppWrapper = ({ children }: IProps) => {
     const { data: session, status } = useSession();
     const { events } = useRouter();
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         console.log('--------------------------------------------');
@@ -18,6 +18,14 @@ const AppWrapper = ({ children }: IProps) => {
         });
         console.log('--------------------------------------------');
     }, [session]);
+
+    useEffect(() => {
+        const disableLoaderTimeout = setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+
+        return () => clearTimeout(disableLoaderTimeout);
+    }, []);
 
     useEffect(() => {
         const start = () => {
@@ -53,7 +61,7 @@ interface IProps {
 
 export const PageLoader = () => {
     return (
-        <Box className="h-screen flex justify-center items-center absolute top-0 bottom-0 right-0 left-0">
+        <Box className="h-screen flex justify-center items-center absolute top-0 bottom-0 right-0 left-0 bg-white z-50">
             <CircularProgress />
         </Box>
     );
