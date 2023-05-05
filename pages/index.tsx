@@ -1,15 +1,17 @@
-import { GetServerSideProps } from 'next';
-import React, { Fragment, useEffect } from 'react';
-import { productListResponse } from './api/product/list';
-import axiosInstance from '@/libs/interceptor';
-import env from '@/utils/env';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux';
-import { setProducts } from '@/redux/slice/products.slice';
-import { useSession } from 'next-auth/react';
-import toast from '@/libs/toast';
 import NoProduct from '@/components/Home/NoProduct';
-import Head from 'next/head';
+import Product from '@/components/Home/Product';
+import ScrollToTop from '@/components/ScrollToTop';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import axiosInstance from '@/libs/interceptor';
+import toast from '@/libs/toast';
+import { setProducts } from '@/redux/slice/products.slice';
+import env from '@/utils/env';
 import { Box } from '@mui/material';
+import { GetServerSideProps } from 'next';
+import { useSession } from 'next-auth/react';
+import Head from 'next/head';
+import { Fragment, useEffect } from 'react';
+import { productListResponse } from './api/product/list';
 
 const Home = ({ data }: { data: productListApiResponse }) => {
     const { data: session } = useSession();
@@ -64,7 +66,23 @@ const Home = ({ data }: { data: productListApiResponse }) => {
                 <title>Home</title>
             </Head>
 
-            <Box>Home</Box>
+            <Box
+                sx={{
+                    width: '100%',
+                    maxWidth: 'calc(100vw - 48px)',
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))',
+                    gap: '1rem',
+                    columnGap: '1rem',
+                    marginX: 'auto',
+                }}
+            >
+                {products.map((product) => {
+                    return <Product key={product.id} product={product} />;
+                })}
+            </Box>
+
+            <ScrollToTop />
         </Fragment>
     );
 };
