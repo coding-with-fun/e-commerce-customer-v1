@@ -24,3 +24,11 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+.cart-badge span {
+    color: #1976d2;
+    background-color: #ffffff;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+}

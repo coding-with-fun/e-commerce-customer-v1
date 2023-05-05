@@ -1,3 +1,4 @@
+import { useAppSelector } from '@/hooks/redux';
 import env from '@/utils/env';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AppBar from '@mui/material/AppBar';
@@ -15,14 +16,14 @@ import Typography from '@mui/material/Typography';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, MouseEvent, useState } from 'react';
+import { Fragment, MouseEvent, useMemo, useState } from 'react';
 
 const Navbar = () => {
     const { status, data: session } = useSession();
     const { push } = useRouter();
+    const { cartData } = useAppSelector((state) => state.cart);
 
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-    // const [openSideBar, setOpenSideBar] = useState(false);
 
     const handleOpenUserMenu = (event: MouseEvent<HTMLElement>): void => {
         setAnchorElUser(event.currentTarget);
@@ -30,6 +31,13 @@ const Navbar = () => {
     const handleCloseUserMenu = (): void => {
         setAnchorElUser(null);
     };
+
+    const totalCartQuantity = useMemo(() => {
+        return Object.values(cartData).reduce(
+            (prev, current) => prev + current,
+            0
+        );
+    }, [cartData]);
 
     return (
         <AppBar position="fixed">
@@ -119,7 +127,7 @@ const Navbar = () => {
                             >
                                 <Link href="/cart">
                                     <Badge
-                                        badgeContent={0}
+                                        badgeContent={totalCartQuantity}
                                         className="cart-badge"
                                     >
                                         <ShoppingCartIcon
