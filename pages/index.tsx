@@ -98,8 +98,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             `${env.baseURL}/api/product/list`
         );
 
-        console.log(res);
-
         return {
             props: {
                 data: res,
