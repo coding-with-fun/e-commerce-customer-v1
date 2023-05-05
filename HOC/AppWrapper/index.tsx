@@ -53,7 +53,7 @@ interface IProps {
 
 export const PageLoader = () => {
     return (
-        <Box className="h-screen flex justify-center items-center">
+        <Box className="h-screen flex justify-center items-center absolute top-0 bottom-0 right-0 left-0">
             <CircularProgress />
         </Box>
     );

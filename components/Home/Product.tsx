@@ -154,11 +154,6 @@ const Product = (props: IProps) => {
 
                     <Box
                         className="mt-1 text-red-600 flex justify-center items-center cursor-pointer"
-                        // onClick={() => {
-                        //     trigger({
-                        //         id: product.id,
-                        //     });
-                        // }}
                         onClick={() => {
                             if (status === 'unauthenticated') {
                                 handleOpenSignInAlert();
@@ -289,5 +284,5 @@ const fetcher = async (
     const response = await axiosInstance.post(url, {
         id: arg.id,
     });
-    return response.data;
+    return response;
 };
