@@ -11,6 +11,7 @@ import Head from 'next/head';
 import { Fragment, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { productListResponse } from './api/product/list';
+import env from '@/utils/env';
 
 const Home = ({ data }: { data: productListApiResponse }) => {
     const { data: session } = useSession();
@@ -94,7 +95,7 @@ type productListApiResponse = {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         const res: productListApiResponse = await axiosInstance.get(
-            'http://localhost:3000/api/product/list'
+            `${env.baseURL}/api/product/list`
         );
 
         console.log(res);

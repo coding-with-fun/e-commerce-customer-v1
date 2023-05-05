@@ -210,7 +210,9 @@ const Navbar = () => {
                                             localStorage.removeItem(
                                                 'persist:root'
                                             );
-                                            signOut();
+                                            signOut({
+                                                callbackUrl: env.baseURL,
+                                            });
                                         }}
                                     >
                                         <Typography textAlign="center">
