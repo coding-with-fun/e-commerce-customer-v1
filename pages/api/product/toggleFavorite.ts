@@ -8,6 +8,7 @@ import { authOptions } from '../auth/[...nextauth]';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
+        const startTime = Date.now();
         if (req.method !== 'POST') {
             throw new Error('API not found!');
         }
@@ -20,12 +21,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             body: { id },
         } = parsedData;
 
+        console.log(
+            `1.) Async function took ${
+                (Date.now() - startTime) / 1000
+            } seconds to complete.`
+        );
+
         const session = await getServerSession(req, res, authOptions);
         if (!session) {
             res.statusCode = 401;
             throw new Error('You are not authenticated.');
         }
         const userID = +session.user.id;
+
+        console.log(
+            `2.) Async function took ${
+                (Date.now() - startTime) / 1000
+            } seconds to complete.`
+        );
 
         const customer = await prisma.customer.findFirst({
             where: {
@@ -35,12 +48,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 favoriteProduct: true,
             },
         });
+
+        console.log(
+            `3.) Async function took ${
+                (Date.now() - startTime) / 1000
+            } seconds to complete.`
+        );
+
         if (!customer) {
             res.statusCode = 400;
             throw new Error('Customer not found with the given ID.');
         }
 
         const isFavorite = customer.favoriteProduct.some((el) => el.id === id);
+
+        console.log(
+            `4.) Async function took ${
+                (Date.now() - startTime) / 1000
+            } seconds to complete.`
+        );
 
         if (!isFavorite) {
             await prisma.customer.update({
@@ -69,6 +95,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 },
             });
         }
+
+        const msElapsed = Date.now() - startTime;
+        console.log(
+            `5.) Async function took ${msElapsed / 1000} seconds to complete.`
+        );
 
         return response(res, {
             message: 'Status updated successfully.',

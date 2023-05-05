@@ -36,6 +36,8 @@ const SignIn = () => {
                 redirect: false,
             })) as SignInResponse;
 
+            localStorage.removeItem('persist:root');
+
             if (!response.ok) {
                 toast(response.error || 'Something went wrong.');
                 setIsDataSubmitting(false);

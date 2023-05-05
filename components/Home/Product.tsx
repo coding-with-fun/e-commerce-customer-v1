@@ -7,6 +7,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Rating from '@mui/material/Rating';
@@ -24,11 +25,22 @@ const Product = (props: IProps) => {
     const { push } = useRouter();
     const dispatch = useDispatch();
 
-    const { trigger } = useSWRMutation('/api/product/toggleFavorite', fetcher, {
-        onError(err) {
-            toast(err.message);
-        },
-    });
+    const { trigger, isMutating } = useSWRMutation(
+        '/api/product/toggleFavorite',
+        fetcher,
+        {
+            onError(err) {
+                toast(err.message);
+            },
+            onSuccess() {
+                dispatch(
+                    toggleFavoriteProduct({
+                        id: product.id,
+                    })
+                );
+            },
+        }
+    );
 
     const [isImageLoading, setIsImageLoading] = useState(true);
 
@@ -52,8 +64,29 @@ const Product = (props: IProps) => {
                 minHeight: '266px',
                 minWidth: '337px',
                 userSelect: 'none',
+                position: 'relative',
             }}
         >
+            {isMutating ? (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        bgcolor: 'black',
+                        opacity: '30%',
+                        top: 0,
+                        bottom: 0,
+                        right: 0,
+                        left: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: '999',
+                    }}
+                >
+                    <CircularProgress />
+                </Box>
+            ) : null}
+
             <Box className="relative h-40">
                 <Image
                     priority
@@ -101,11 +134,6 @@ const Product = (props: IProps) => {
                 <Box
                     className="mt-1 text-red-600 flex justify-center items-center cursor-pointer"
                     onClick={() => {
-                        dispatch(
-                            toggleFavoriteProduct({
-                                id: product.id,
-                            })
-                        );
                         trigger({
                             id: product.id,
                         });
