@@ -35,7 +35,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     } catch (error) {
         return response(res, null, error);
     } finally {
-        prisma.$disconnect();
+        await prisma.$disconnect();
     }
 };
 

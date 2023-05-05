@@ -24,6 +24,8 @@ export const authOptions: NextAuthOptions = {
                     throw new Error('Customer not found.');
                 }
 
+                await prisma.$disconnect();
+
                 return {
                     ...customer,
                     id: `${customer.id}`,
