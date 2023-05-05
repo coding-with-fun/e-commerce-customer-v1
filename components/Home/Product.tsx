@@ -2,7 +2,11 @@ import Modal from '@/HOC/Modal';
 import axiosInstance from '@/libs/interceptor';
 import toast from '@/libs/toast';
 import { productListResponse } from '@/pages/api/product/list';
-import { toggleFavoriteProduct } from '@/redux/slice/products.slice';
+import {
+    addProductToCart,
+    removeProductFromCart,
+    toggleFavoriteProduct,
+} from '@/redux/slice/products.slice';
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
@@ -22,12 +26,15 @@ import { useDispatch } from 'react-redux';
 import useSWRMutation from 'swr/mutation';
 import SignInAlert from './SignInAlert';
 import { useSession } from 'next-auth/react';
+import { useAppSelector } from '@/hooks/redux';
+import _ from 'lodash';
 
 const Product = (props: IProps) => {
     const { product } = props;
     const { push } = useRouter();
     const { status } = useSession();
     const dispatch = useDispatch();
+    const cartData = useAppSelector((state) => state.products.cartData);
 
     const { trigger, isMutating } = useSWRMutation(
         '/api/product/toggleFavorite',
@@ -216,7 +223,16 @@ const Product = (props: IProps) => {
                             gap: '0.5rem',
                         }}
                     >
-                        <IconButton aria-label="removeFromCart">
+                        <IconButton
+                            aria-label="removeFromCart"
+                            onClick={() => {
+                                dispatch(
+                                    removeProductFromCart({
+                                        productID: product.id,
+                                    })
+                                );
+                            }}
+                        >
                             <RemoveIcon />
                         </IconButton>
 
@@ -225,10 +241,19 @@ const Product = (props: IProps) => {
                                 cursor: 'text',
                             }}
                         >
-                            0
+                            {_.get(cartData[product.id], 'inCart', 0)}
                         </Typography>
 
-                        <IconButton aria-label="addToCart">
+                        <IconButton
+                            aria-label="addToCart"
+                            onClick={() => {
+                                dispatch(
+                                    addProductToCart({
+                                        productID: product.id,
+                                    })
+                                );
+                            }}
+                        >
                             <AddIcon />
                         </IconButton>
                     </Box>
