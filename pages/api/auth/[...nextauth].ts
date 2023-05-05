@@ -42,7 +42,7 @@ export const authOptions: NextAuthOptions = {
         signOut: '/',
         error: '/',
     },
-    debug: true,
+    debug: process.env.NODE_ENV !== 'production',
     callbacks: {
         async jwt({ token, user, session, trigger }) {
             if (trigger === 'update' && session) {
