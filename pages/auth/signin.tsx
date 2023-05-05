@@ -9,17 +9,11 @@ import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import { SignInResponse, signIn } from 'next-auth/react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 import z from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 const SignIn = () => {
-    const {
-        query: { callbackUrl },
-        push,
-    } = useRouter();
-
     const [isDataSubmitting, setIsDataSubmitting] = useState(false);
 
     const formik = useFormik({
@@ -35,8 +29,6 @@ const SignIn = () => {
                 password: values.password,
                 redirect: false,
             })) as SignInResponse;
-
-            localStorage.removeItem('persist:root');
 
             if (!response.ok) {
                 toast(response.error || 'Something went wrong.');

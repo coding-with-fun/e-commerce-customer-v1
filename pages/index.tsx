@@ -1,23 +1,22 @@
 import NoProduct from '@/components/Home/NoProduct';
 import Product from '@/components/Home/Product';
-import { useAppSelector } from '@/hooks/redux';
+import ScrollToTop from '@/components/ScrollToTop';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import axiosInstance from '@/libs/interceptor';
 import toast from '@/libs/toast';
 import { setProducts } from '@/redux/slice/products.slice';
+import env from '@/utils/env';
 import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { Fragment, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { productListResponse } from './api/product/list';
-import env from '@/utils/env';
-import ScrollToTop from '@/components/ScrollToTop';
 
 const Home = ({ data }: { data: productListApiResponse }) => {
     const { data: session } = useSession();
     const products = useAppSelector((state) => state.products.products);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const { message, products: resProducts, success } = data;
 

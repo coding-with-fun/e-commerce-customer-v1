@@ -1,8 +1,12 @@
 import Modal from '@/HOC/Modal';
-import { useAppSelector } from '@/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import axiosInstance from '@/libs/interceptor';
 import toast from '@/libs/toast';
 import { productListResponse } from '@/pages/api/product/list';
+import {
+    addProductToCart,
+    removeProductFromCart,
+} from '@/redux/slice/cart.slice';
 import { toggleFavoriteProduct } from '@/redux/slice/products.slice';
 import AddIcon from '@mui/icons-material/Add';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
@@ -20,19 +24,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import useSWRMutation from 'swr/mutation';
 import SignInAlert from './SignInAlert';
-import {
-    addProductToCart,
-    removeProductFromCart,
-} from '@/redux/slice/cart.slice';
 
 const Product = (props: IProps) => {
     const { product } = props;
     const { push } = useRouter();
     const { status } = useSession();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { cartData, updatingCart } = useAppSelector((state) => state.cart);
 
     const { trigger, isMutating } = useSWRMutation(

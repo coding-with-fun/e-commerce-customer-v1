@@ -207,9 +207,6 @@ const Navbar = () => {
 
                                     <MenuItem
                                         onClick={() => {
-                                            localStorage.removeItem(
-                                                'persist:root'
-                                            );
                                             signOut({
                                                 callbackUrl: env.baseURL,
                                             });
