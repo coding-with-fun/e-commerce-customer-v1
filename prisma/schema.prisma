@@ -17,13 +17,19 @@ model customer {
   email           String    @unique
   password        String
   contactNumber   String    @unique
+  // -------------------------------
   // Flags
+  // -------------------------------
   isActive        Boolean   @default(true)
   isDeleted       Boolean   @default(false)
+  // -------------------------------
   // Dates
+  // -------------------------------
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  // -------------------------------
   // Relationship
+  // -------------------------------
   favoriteProduct product[]
   // -------------------------------
   cart            cart?
@@ -36,13 +42,19 @@ model seller {
   email          String    @unique
   password       String
   contactNumber  String    @unique
+  // -------------------------------
   // Flags
+  // -------------------------------
   isActive       Boolean   @default(true)
   isDeleted      Boolean   @default(false)
+  // -------------------------------
   // Dates
+  // -------------------------------
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  // -------------------------------
   // Relationship
+  // -------------------------------
   products       product[]
 }
 
@@ -55,13 +67,19 @@ model product {
   ratings      Float
   totalRatings Int
   coverImage   String
+  // -------------------------------
   // Flags
+  // -------------------------------
   isActive     Boolean    @default(true)
   isDeleted    Boolean    @default(false)
+  // -------------------------------
   // Dates
+  // -------------------------------
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
+  // -------------------------------
   // Relationship
+  // -------------------------------
   favoriteBy   customer[]
   // -------------------------------
   seller       seller?    @relation(fields: [sellerId], references: [id])
@@ -72,7 +90,14 @@ model product {
 
 model cart {
   id         Int       @id @default(autoincrement())
+  // -------------------------------
+  // Dates
+  // -------------------------------
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  // -------------------------------
   // Relationship
+  // -------------------------------
   product    product[]
   // -------------------------------
   customer   customer  @relation(fields: [customerId], references: [id])
