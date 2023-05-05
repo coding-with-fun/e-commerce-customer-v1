@@ -9,7 +9,8 @@
         "inputerror",
         "nextauth",
         "persistor",
-        "reduxjs"
+        "reduxjs",
+        "tailwindcss"
     ],
     "ignoreWords": [],
     "import": []

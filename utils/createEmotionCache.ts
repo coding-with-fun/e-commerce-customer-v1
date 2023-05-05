@@ -4,6 +4,7 @@ const createEmotionCache: () => EmotionCache = () => {
     return createCache({
         key: 'css',
         prepend: true,
+        speedy: true,
     });
 };
 

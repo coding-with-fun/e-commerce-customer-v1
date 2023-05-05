@@ -1,6 +1,6 @@
 import AppWrapper from '@/HOC/AppWrapper';
 import Navbar from '@/components/Navbar';
-import store, { persistor } from '@/redux/store';
+import store from '@/redux/store';
 import theme from '@/styles/theme';
 import createEmotionCache from '@/utils/createEmotionCache';
 import { CacheProvider, type EmotionCache } from '@emotion/react';
@@ -10,7 +10,6 @@ import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-import { PersistGate } from 'redux-persist/integration/react';
 
 import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -23,38 +22,37 @@ const App = ({
     pageProps: { session, ...pageProps },
 }: CustomAppProps) => {
     return (
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <SessionProvider session={session} refetchOnWindowFocus={false}>
-                    <CacheProvider value={emotionCache}>
-                        <ThemeProvider theme={theme}>
-                            <CssBaseline />
+        <CacheProvider value={emotionCache}>
+            <ThemeProvider theme={theme}>
+                <Provider store={store}>
+                    <SessionProvider
+                        session={session}
+                        refetchOnWindowFocus={false}
+                    >
+                        <CssBaseline />
+                        <Navbar />
+                        <AppWrapper>
+                            <ToastContainer
+                                position="top-right"
+                                autoClose={5000}
+                                hideProgressBar={false}
+                                newestOnTop={false}
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                draggable
+                                pauseOnHover
+                                theme="light"
+                            />
 
-                            <Navbar />
-
-                            <AppWrapper>
-                                <ToastContainer
-                                    position="top-right"
-                                    autoClose={5000}
-                                    hideProgressBar={false}
-                                    newestOnTop={false}
-                                    closeOnClick
-                                    rtl={false}
-                                    pauseOnFocusLoss
-                                    draggable
-                                    pauseOnHover
-                                    theme="light"
-                                />
-
-                                <main className="p-4 pt-20 h-full">
-                                    <Component {...pageProps} />
-                                </main>
-                            </AppWrapper>
-                        </ThemeProvider>
-                    </CacheProvider>
-                </SessionProvider>
-            </PersistGate>
-        </Provider>
+                            <main className="p-4 pt-20 h-full">
+                                <Component {...pageProps} />
+                            </main>
+                        </AppWrapper>
+                    </SessionProvider>
+                </Provider>
+            </ThemeProvider>
+        </CacheProvider>
     );
 };
 
