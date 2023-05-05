@@ -32,7 +32,7 @@ const Product = (props: IProps) => {
     const { push } = useRouter();
     const { status } = useSession();
     const dispatch = useAppDispatch();
-    const { cartData, updatingCart } = useAppSelector((state) => state.cart);
+    const { cartData } = useAppSelector((state) => state.cart);
 
     const { trigger, isMutating } = useSWRMutation(
         '/api/product/toggleFavorite',
@@ -230,7 +230,6 @@ const Product = (props: IProps) => {
                                     })
                                 );
                             }}
-                            disabled={updatingCart}
                         >
                             <RemoveIcon />
                         </IconButton>
@@ -253,7 +252,6 @@ const Product = (props: IProps) => {
                                     })
                                 );
                             }}
-                            disabled={updatingCart}
                         >
                             <AddIcon />
                         </IconButton>

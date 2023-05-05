@@ -6,12 +6,10 @@ export interface IInitialData {
     cartData: {
         [id: string]: number;
     };
-    updatingCart: boolean;
 }
 
 const initialState: IInitialData = {
     cartData: {},
-    updatingCart: false,
 };
 
 const CartSlice = createSlice({
@@ -19,7 +17,6 @@ const CartSlice = createSlice({
     initialState,
     reducers: {
         addProductToCart: (state, action) => {
-            state.updatingCart = true;
             const productID = _.get(action, 'payload.productID');
             const productQuantity = _.get(action, 'payload.productQuantity');
 
@@ -32,12 +29,9 @@ const CartSlice = createSlice({
                     state.cartData[productID] += 1;
                 }
             }
-
-            state.updatingCart = false;
         },
 
         removeProductFromCart: (state, action) => {
-            state.updatingCart = true;
             const productID = _.get(action, 'payload.productID');
 
             if (productID) {
@@ -49,8 +43,6 @@ const CartSlice = createSlice({
                     delete state.cartData[productID];
                 }
             }
-
-            state.updatingCart = false;
         },
     },
 });
