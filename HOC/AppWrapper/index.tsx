@@ -22,7 +22,7 @@ const AppWrapper = ({ children }: IProps) => {
     useEffect(() => {
         const disableLoaderTimeout = setTimeout(() => {
             setLoading(false);
-        }, 1000);
+        }, 10);
 
         return () => clearTimeout(disableLoaderTimeout);
     }, []);
@@ -61,7 +61,7 @@ interface IProps {
 
 export const PageLoader = () => {
     return (
-        <Box className="h-screen flex justify-center items-center absolute top-0 bottom-0 right-0 left-0 bg-white z-50">
+        <Box className="h-screen flex justify-center items-center absolute top-0 bottom-0 right-0 left-0 bg-white z-10">
             <CircularProgress />
         </Box>
     );
