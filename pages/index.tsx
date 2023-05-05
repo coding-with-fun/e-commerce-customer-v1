@@ -12,6 +12,7 @@ import { Fragment, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { productListResponse } from './api/product/list';
 import env from '@/utils/env';
+import ScrollToTop from '@/components/ScrollToTop';
 
 const Home = ({ data }: { data: productListApiResponse }) => {
     const { data: session } = useSession();
@@ -80,6 +81,8 @@ const Home = ({ data }: { data: productListApiResponse }) => {
                     return <Product key={product.id} product={product} />;
                 })}
             </Box>
+
+            <ScrollToTop />
         </Fragment>
     );
 };
