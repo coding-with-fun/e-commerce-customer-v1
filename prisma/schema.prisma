@@ -25,6 +25,8 @@ model customer {
   updatedAt       DateTime  @updatedAt
   // Relationship
   favoriteProduct product[]
+  // -------------------------------
+  cart            cart?
 }
 
 model seller {
@@ -64,4 +66,15 @@ model product {
   // -------------------------------
   seller       seller?    @relation(fields: [sellerId], references: [id])
   sellerId     Int?
+  // -------------------------------
+  cart         cart[]
+}
+
+model cart {
+  id         Int       @id @default(autoincrement())
+  // Relationship
+  product    product[]
+  // -------------------------------
+  customer   customer  @relation(fields: [customerId], references: [id])
+  customerId Int       @unique
 }
