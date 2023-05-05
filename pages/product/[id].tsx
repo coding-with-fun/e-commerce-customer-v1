@@ -1,10 +1,14 @@
+import { PageLoader } from '@/HOC/AppWrapper';
+import Details from '@/components/Product/Details';
 import NoProduct from '@/components/Product/Details/NoProduct';
 import axiosInstance from '@/libs/interceptor';
 import toast from '@/libs/toast';
 import env from '@/utils/env';
+import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import Head from 'next/head';
+import { Fragment, useEffect, useState } from 'react';
 import { productDetailsResponse } from '../api/product/details/[id]';
 
 const Product = ({ data }: { data: productDetailsApiResponse }) => {
@@ -37,7 +41,19 @@ const Product = ({ data }: { data: productDetailsApiResponse }) => {
         return <NoProduct />;
     }
 
-    return <div>Product</div>;
+    return product ? (
+        <Fragment>
+            <Head>
+                <title>{product.title}</title>
+            </Head>
+
+            <Box>
+                <Details />
+            </Box>
+        </Fragment>
+    ) : (
+        <PageLoader />
+    );
 };
 
 export default Product;
