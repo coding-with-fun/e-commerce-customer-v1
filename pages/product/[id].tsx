@@ -1,11 +1,11 @@
+import NoProduct from '@/components/Product/Details/NoProduct';
 import axiosInstance from '@/libs/interceptor';
+import toast from '@/libs/toast';
 import env from '@/utils/env';
 import { GetServerSideProps } from 'next';
-import { productDetailsResponse } from '../api/product/details/[id]';
-import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import toast from '@/libs/toast';
-import NoProduct from '@/components/Product/Details/NoProduct';
+import { useEffect, useState } from 'react';
+import { productDetailsResponse } from '../api/product/details/[id]';
 
 const Product = ({ data }: { data: productDetailsApiResponse }) => {
     const { data: session } = useSession();
@@ -59,7 +59,8 @@ const fetcher = async (id: string) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
         const { id } = context.query;
-        const res: productDetailsApiResponse = await fetcher(id as string);
+        const productID = (id as string).split('-').pop() as string;
+        const res: productDetailsApiResponse = await fetcher(productID);
 
         return {
             props: {

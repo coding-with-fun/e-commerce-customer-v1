@@ -27,6 +27,8 @@ const Product = ({ product }: IProps) => {
     const { status } = useSession();
     const dispatch = useAppDispatch();
 
+    const productSlug = product.title.split(' ').join('-') + `-${product.id}`;
+
     const { trigger, isMutating } = useSWRMutation(
         '/api/product/toggleFavorite',
         fetcher,
@@ -114,7 +116,7 @@ const Product = ({ product }: IProps) => {
                             display: isImageLoading ? 'none' : 'block',
                         }}
                         onClick={() => {
-                            push(`product/${product.id}`);
+                            push(`product/${productSlug}`);
                         }}
                     />
 
@@ -131,7 +133,7 @@ const Product = ({ product }: IProps) => {
 
                 <Box className="flex items-start mt-4 gap-4">
                     <Box className="flex flex-col">
-                        <Link href={`product/${product.id}`}>
+                        <Link href={`product/${productSlug}`}>
                             <Typography className="product-title font-medium hover:underline">
                                 {product.title}
                             </Typography>
