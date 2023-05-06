@@ -9,14 +9,14 @@ const authenticatedPage = (
 ) => {
     const AuthenticatedComponent = (props: any) => {
         const { status } = useSession();
-        const { push, pathname } = useRouter();
+        const { push, asPath } = useRouter();
 
         if (status === 'loading') {
             return <PageLoader />;
         }
 
         if (status === 'unauthenticated') {
-            const url = encodeURIComponent(env.baseURL + pathname);
+            const url = encodeURIComponent(env.baseURL + asPath);
             push(`/auth/signin?callbackUrl=${url}`);
             return;
         }

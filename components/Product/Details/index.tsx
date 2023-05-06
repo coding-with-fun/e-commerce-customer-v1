@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import { ChangeEvent, Fragment, useState } from 'react';
 
 const Details = ({ product }: IProps) => {
-    const router = useRouter();
+    const { asPath } = useRouter();
 
     const [itemsToAddInCart, setItemsToAddInCart] = useState(1);
     const [isShareLinkAlertOpen, setIsShareLinkAlertOpen] = useState(false);
@@ -156,7 +156,7 @@ const Details = ({ product }: IProps) => {
                 setCleanModalContent={setCleanShareLinkAlertContent}
             >
                 {cleanShareLinkAlertContent ? null : (
-                    <ShareLinkAlert url={env.baseURL + router.asPath} />
+                    <ShareLinkAlert url={env.baseURL + asPath} />
                 )}
             </Modal>
         </Fragment>
