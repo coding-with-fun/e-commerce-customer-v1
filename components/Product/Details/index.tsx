@@ -1,6 +1,8 @@
 import Modal from '@/HOC/Modal';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import toast from '@/libs/toast';
 import { productDetailsResponse } from '@/pages/api/product/details/[id]';
+import { addProductToCart } from '@/redux/slice/cart.slice';
 import env from '@/utils/env';
 import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -15,6 +17,8 @@ import { ChangeEvent, Fragment, useState } from 'react';
 const Details = ({ product }: IProps) => {
     const { asPath } = useRouter();
     const session = useSession();
+    const dispatch = useAppDispatch();
+    const { cartData } = useAppSelector((state) => state.cart);
 
     const [itemsToAddInCart, setItemsToAddInCart] = useState(1);
     const [isShareLinkAlertOpen, setIsShareLinkAlertOpen] = useState(false);
@@ -47,6 +51,22 @@ const Details = ({ product }: IProps) => {
     const handleRemoveFromCart = () => {
         if (itemsToAddInCart > 1) {
             setItemsToAddInCart((prev) => prev - 1);
+        }
+    };
+
+    const handleProductToCart = () => {
+        if ((cartData[product.id] ?? 0) + itemsToAddInCart > product.quantity) {
+            toast(
+                `The vendor has only ${product.quantity} of the quantity available.`
+            );
+            setItemsToAddInCart(1);
+        } else {
+            dispatch(
+                addProductToCart({
+                    productID: product.id,
+                    productQuantity: itemsToAddInCart,
+                })
+            );
         }
     };
 
@@ -124,7 +144,10 @@ const Details = ({ product }: IProps) => {
                             </ButtonBase>
                         </Box>
 
-                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-black border-solid cursor-pointer mt-3">
+                        <ButtonBase
+                            className="w-full h-12 flex justify-center items-center border border-black border-solid cursor-pointer mt-3"
+                            onClick={handleProductToCart}
+                        >
                             <Typography>Add to cart</Typography>
                         </ButtonBase>
 

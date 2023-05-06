@@ -1,4 +1,5 @@
-import { useAppSelector } from '@/hooks/redux';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { setCartFromLocalStorage } from '@/redux/slice/cart.slice';
 import env from '@/utils/env';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AppBar from '@mui/material/AppBar';
@@ -16,12 +17,13 @@ import Typography from '@mui/material/Typography';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Fragment, MouseEvent, useMemo, useState } from 'react';
+import { Fragment, MouseEvent, useEffect, useMemo, useState } from 'react';
 
 const Navbar = () => {
     const { status, data: session } = useSession();
     const { push, asPath } = useRouter();
     const { cartData } = useAppSelector((state) => state.cart);
+    const dispatch = useAppDispatch();
 
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -38,6 +40,12 @@ const Navbar = () => {
             0
         );
     }, [cartData]);
+
+    useEffect(() => {
+        dispatch(setCartFromLocalStorage());
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <AppBar position="fixed">
