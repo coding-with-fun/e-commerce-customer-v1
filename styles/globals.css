@@ -25,6 +25,12 @@
     overflow: hidden;
 }
 
+.share-link {
+    text-overflow: ellipsis; /* enables ellipsis */
+    white-space: nowrap; /* keeps the text in a single line */
+    overflow: hidden; /* keeps the element from overflowing its parent */
+}
+
 .cart-badge span {
     color: #1976d2;
     background-color: #ffffff;

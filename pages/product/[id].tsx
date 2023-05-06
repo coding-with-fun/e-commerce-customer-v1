@@ -48,7 +48,7 @@ const Product = ({ data }: { data: productDetailsApiResponse }) => {
             </Head>
 
             <Box>
-                <Details />
+                <Details product={product} />
             </Box>
         </Fragment>
     ) : (
