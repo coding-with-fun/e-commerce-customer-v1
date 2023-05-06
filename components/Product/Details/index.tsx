@@ -50,8 +50,8 @@ const Details = ({ product }: IProps) => {
 
     return (
         <Fragment>
-            <Box className="flex flex-col gap-8 py-16 md:flex-row">
-                <Box className="relative md:flex-1 h-[250px] md:h-auto sm:h-[320px]">
+            <Box className="flex flex-col gap-8 py-16 md:flex-row md:justify-center">
+                <Box className="relative max-w-[470px] w-full mx-auto md:mx-0 md:flex-1 h-[250px] md:h-auto sm:h-[320px]">
                     <Image
                         priority
                         fill
