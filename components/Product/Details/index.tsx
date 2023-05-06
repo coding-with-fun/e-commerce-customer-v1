@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ShareIcon from '@mui/icons-material/Share';
-import { Box, InputBase, Typography } from '@mui/material';
+import { Box, ButtonBase, InputBase, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { ChangeEvent, Fragment, useState } from 'react';
@@ -14,7 +14,7 @@ import { ChangeEvent, Fragment, useState } from 'react';
 const Details = ({ product }: IProps) => {
     const router = useRouter();
 
-    const [itemsToAddInCart, setItemsToAddInCart] = useState('1');
+    const [itemsToAddInCart, setItemsToAddInCart] = useState(1);
     const [isShareLinkAlertOpen, setIsShareLinkAlertOpen] = useState(false);
     const [cleanShareLinkAlertContent, setCleanShareLinkAlertContent] =
         useState(false);
@@ -28,14 +28,30 @@ const Details = ({ product }: IProps) => {
     };
 
     const handleChangeItemsInCart = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setItemsToAddInCart(value);
+        let value: number | string = e.target.value;
+
+        if (!isNaN(+value)) {
+            value = +value;
+            setItemsToAddInCart(value);
+        }
+    };
+
+    const handleAddMoreToCart = () => {
+        if (product.quantity > itemsToAddInCart) {
+            setItemsToAddInCart((prev) => prev + 1);
+        }
+    };
+
+    const handleRemoveFromCart = () => {
+        if (itemsToAddInCart > 1) {
+            setItemsToAddInCart((prev) => prev - 1);
+        }
     };
 
     return (
         <Fragment>
-            <Box className="flex max-h-[70vh] gap-8">
-                <Box className="relative flex-1">
+            <Box className="flex flex-col gap-8 py-16 md:flex-row">
+                <Box className="relative md:flex-1 h-[250px] md:h-auto sm:h-[320px]">
                     <Image
                         priority
                         fill
@@ -45,63 +61,86 @@ const Details = ({ product }: IProps) => {
                         sizes="160px"
                         style={{
                             objectFit: 'contain',
-                            cursor: 'pointer',
                         }}
                     />
                 </Box>
 
-                <Box className="w-1/2">
-                    <Typography>{product.seller?.name}</Typography>
+                <Box className="md:w-1/2">
+                    <Typography className="text-sm">
+                        {product.seller?.name}
+                    </Typography>
 
-                    <Typography className="product-title font-medium">
+                    <Typography
+                        component="h1"
+                        variant="h4"
+                        className="product-title font-medium mb-6"
+                    >
                         {product.title}
                     </Typography>
 
                     <Box>
-                        <Typography>Rs. {product.price}</Typography>
+                        <Typography className="text-lg">
+                            Rs. {product.price}
+                        </Typography>
                     </Box>
 
-                    <Box>
-                        <Typography>Quantity</Typography>
+                    <Typography className="text-xs">
+                        Taxes & India shipping included.
+                    </Typography>
 
-                        <Box className="flex items-center border border-black border-solid w-fit h-12">
-                            <Box className="w-11 h-11 flex cursor-pointer">
-                                <RemoveIcon className="m-auto" />
-                            </Box>
+                    <Box className="mt-3">
+                        <Typography className="text-xs mb-1">
+                            Quantity
+                        </Typography>
+
+                        <Box className="flex items-center border border-black border-solid w-fit">
+                            <ButtonBase
+                                className="w-11 h-11 flex cursor-pointer"
+                                onClick={() => {
+                                    handleRemoveFromCart();
+                                }}
+                            >
+                                <RemoveIcon className="m-auto pointer-events-none w-4" />
+                            </ButtonBase>
 
                             <InputBase
                                 value={itemsToAddInCart}
                                 onChange={handleChangeItemsInCart}
-                                className="w-8"
+                                className="w-12 h-11"
                                 inputProps={{
-                                    className: 'text-center',
+                                    className: 'text-center h-full w-full p-0',
                                 }}
                             />
 
-                            <Box className="w-11 h-11 flex cursor-pointer">
-                                <AddIcon className="m-auto" />
-                            </Box>
+                            <ButtonBase
+                                className="w-11 h-11 flex cursor-pointer"
+                                onClick={() => {
+                                    handleAddMoreToCart();
+                                }}
+                            >
+                                <AddIcon className="m-auto pointer-events-none w-4" />
+                            </ButtonBase>
                         </Box>
                     </Box>
 
-                    <Box className="max-w-[44rem] my-10">
-                        <Box className="w-full h-12 flex justify-center items-center border border-black border-solid mb-4 cursor-pointer">
+                    <Box className="max-w-[30rem] my-10">
+                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-black border-solid mb-4 cursor-pointer">
                             <Typography>Add to cart</Typography>
-                        </Box>
+                        </ButtonBase>
 
-                        <Box className="w-full h-12 flex justify-center items-center border border-black border-solid bg-black text-white cursor-pointer">
+                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-black border-solid bg-black text-white cursor-pointer">
                             <Typography>Buy it now</Typography>
-                        </Box>
+                        </ButtonBase>
                     </Box>
 
-                    <Typography>
+                    <Typography className="text-gray-600 font-light text-sm">
                         Item ships in 1-2 business days from our warehouse. Free
                         shipping all over India, delivers within 7-10 business
                         days.
                     </Typography>
 
                     <Box
-                        className="flex items-center justify-start gap-2 mt-10 cursor-pointer w-fit hover:underline"
+                        className="flex items-center justify-start gap-2 mt-2 cursor-pointer w-fit hover:underline"
                         onClick={handleOpenShareLinkAlert}
                     >
                         <ShareIcon className="text-sm" />
@@ -135,7 +174,7 @@ const ShareLinkAlert = ({ url }: { url: string }) => {
         <Box>
             <Typography className="text-lg mb-5">Share</Typography>
 
-            <Box className="flex gap-3 items-center bg-[#f9f9f9] border border-solid border-[rgba(0, 0, 0, 0.1)] rounded-lg py-2 px-4">
+            <Box className="flex items-center bg-[#f9f9f9] border border-solid border-[rgba(0, 0, 0, 0.1)] rounded-lg pl-4">
                 <InputBase
                     value={url}
                     fullWidth
@@ -144,13 +183,15 @@ const ShareLinkAlert = ({ url }: { url: string }) => {
                     }}
                 />
 
-                <ContentCopyIcon
-                    className="cursor-pointer"
+                <ButtonBase
+                    className="cursor-pointer py-2 p-4"
                     onClick={() => {
                         navigator.clipboard.writeText(url);
                         toast('Link copied to clipboard', 'success');
                     }}
-                />
+                >
+                    <ContentCopyIcon />
+                </ButtonBase>
             </Box>
         </Box>
     );
