@@ -1,14 +1,11 @@
 import WarningIcon from '@/public/assets/icons/warning.png';
 import { Box, Button, Typography } from '@mui/material';
+import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 const SignInAlert = () => {
-    const { push } = useRouter();
-
-    const handleSignIn = () => {
-        push(`/auth/signin`);
-    };
+    const { asPath } = useRouter();
 
     return (
         <Box className="flex flex-col items-center gap-4">
@@ -23,7 +20,15 @@ const SignInAlert = () => {
                 </Typography>
             </Box>
 
-            <Button variant="outlined" onClick={handleSignIn}>
+            <Button
+                variant="outlined"
+                onClick={() => {
+                    signIn(undefined, {
+                        callbackUrl: asPath,
+                    });
+                }}
+                className="cursor-pointer"
+            >
                 Sign In
             </Button>
         </Box>

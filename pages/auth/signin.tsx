@@ -34,7 +34,7 @@ const SignIn = () => {
                 callbackUrl: (query.callbackUrl as string | undefined) ?? '',
             })) as SignInResponse;
 
-            if (!response.ok) {
+            if (response && !response.ok) {
                 toast(response.error || 'Something went wrong.');
                 setIsDataSubmitting(false);
             }

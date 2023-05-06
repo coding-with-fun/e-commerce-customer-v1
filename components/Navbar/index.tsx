@@ -13,7 +13,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { signOut, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Fragment, MouseEvent, useMemo, useState } from 'react';
@@ -150,14 +150,15 @@ const Navbar = () => {
                                     }),
                                 }}
                             >
-                                <Typography>
-                                    <Link
-                                        href={`/auth/signin?callbackUrl=${
-                                            env.baseURL + asPath
-                                        }`}
-                                    >
-                                        Sign In
-                                    </Link>
+                                <Typography
+                                    onClick={() => {
+                                        signIn(undefined, {
+                                            callbackUrl: asPath,
+                                        });
+                                    }}
+                                    className="cursor-pointer"
+                                >
+                                    Sign In
                                 </Typography>
 
                                 <Typography>
@@ -191,47 +192,52 @@ const Navbar = () => {
                                     </Tooltip>
                                 )}
 
-                                <Menu
-                                    sx={{
-                                        mt: '45px',
-                                    }}
-                                    anchorEl={anchorElUser}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorElUser)}
-                                    onClose={handleCloseUserMenu}
-                                >
-                                    <MenuItem
-                                        onClick={() => {
-                                            push('/profile');
-                                            handleCloseUserMenu();
+                                {['unauthenticated', 'loading'].includes(
+                                    status
+                                ) || !session ? null : (
+                                    <Menu
+                                        sx={{
+                                            mt: '45px',
                                         }}
+                                        anchorEl={anchorElUser}
+                                        anchorOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        open={Boolean(anchorElUser)}
+                                        onClose={handleCloseUserMenu}
                                     >
-                                        <Typography textAlign="center">
-                                            Profile
-                                        </Typography>
-                                    </MenuItem>
+                                        <MenuItem
+                                            onClick={() => {
+                                                push('/profile');
+                                                handleCloseUserMenu();
+                                            }}
+                                        >
+                                            <Typography textAlign="center">
+                                                Profile
+                                            </Typography>
+                                        </MenuItem>
 
-                                    <MenuItem
-                                        onClick={() => {
-                                            signOut({
-                                                callbackUrl:
-                                                    env.baseURL + asPath,
-                                            });
-                                        }}
-                                    >
-                                        <Typography textAlign="center">
-                                            Sign Out
-                                        </Typography>
-                                    </MenuItem>
-                                </Menu>
+                                        <MenuItem
+                                            onClick={() => {
+                                                signOut({
+                                                    callbackUrl:
+                                                        env.baseURL + asPath,
+                                                    redirect: false,
+                                                });
+                                            }}
+                                        >
+                                            <Typography textAlign="center">
+                                                Sign Out
+                                            </Typography>
+                                        </MenuItem>
+                                    </Menu>
+                                )}
                             </Box>
                         </Fragment>
                     )}

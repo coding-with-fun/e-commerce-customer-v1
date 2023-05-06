@@ -7,12 +7,14 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ShareIcon from '@mui/icons-material/Share';
 import { Box, ButtonBase, InputBase, Typography } from '@mui/material';
+import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { ChangeEvent, Fragment, useState } from 'react';
 
 const Details = ({ product }: IProps) => {
     const { asPath } = useRouter();
+    const session = useSession();
 
     const [itemsToAddInCart, setItemsToAddInCart] = useState(1);
     const [isShareLinkAlertOpen, setIsShareLinkAlertOpen] = useState(false);
@@ -88,7 +90,7 @@ const Details = ({ product }: IProps) => {
                         Taxes & India shipping included.
                     </Typography>
 
-                    <Box className="mt-3">
+                    <Box className="my-10 max-w-[30rem]">
                         <Typography className="text-xs mb-1">
                             Quantity
                         </Typography>
@@ -121,14 +123,35 @@ const Details = ({ product }: IProps) => {
                                 <AddIcon className="m-auto pointer-events-none w-4" />
                             </ButtonBase>
                         </Box>
-                    </Box>
 
-                    <Box className="max-w-[30rem] my-10">
-                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-black border-solid mb-4 cursor-pointer">
+                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-black border-solid cursor-pointer mt-3">
                             <Typography>Add to cart</Typography>
                         </ButtonBase>
 
-                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-black border-solid bg-black text-white cursor-pointer">
+                        {session.status === 'unauthenticated' ? (
+                            <Box className="flex gap-[4px]">
+                                <Typography className="text-xs">
+                                    Please
+                                </Typography>
+
+                                <Typography
+                                    onClick={() => {
+                                        signIn(undefined, {
+                                            callbackUrl: asPath,
+                                        });
+                                    }}
+                                    className="cursor-pointer text-xs font-semibold underline"
+                                >
+                                    sign in
+                                </Typography>
+
+                                <Typography className="text-xs">
+                                    to sync your cart across devices.
+                                </Typography>
+                            </Box>
+                        ) : null}
+
+                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-black border-solid bg-black text-white cursor-pointer mt-4">
                             <Typography>Buy it now</Typography>
                         </ButtonBase>
                     </Box>
