@@ -9,11 +9,14 @@ import Typography from '@mui/material/Typography';
 import { useFormik } from 'formik';
 import { SignInResponse, signIn } from 'next-auth/react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { Fragment, useState } from 'react';
 import z from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 const SignIn = () => {
+    const { query } = useRouter();
+
     const [isDataSubmitting, setIsDataSubmitting] = useState(false);
 
     const formik = useFormik({
@@ -27,7 +30,8 @@ const SignIn = () => {
             const response = (await signIn('credentials', {
                 email: values.email,
                 password: values.password,
-                redirect: false,
+                // redirect: false,
+                callbackUrl: (query.callbackUrl as string | undefined) ?? '',
             })) as SignInResponse;
 
             if (!response.ok) {

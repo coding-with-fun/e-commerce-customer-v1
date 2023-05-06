@@ -20,7 +20,7 @@ import { Fragment, MouseEvent, useMemo, useState } from 'react';
 
 const Navbar = () => {
     const { status, data: session } = useSession();
-    const { push } = useRouter();
+    const { push, asPath } = useRouter();
     const { cartData } = useAppSelector((state) => state.cart);
 
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -151,7 +151,13 @@ const Navbar = () => {
                                 }}
                             >
                                 <Typography>
-                                    <Link href="/auth/signin">Sign In</Link>
+                                    <Link
+                                        href={`/auth/signin?callbackUrl=${
+                                            env.baseURL + asPath
+                                        }`}
+                                    >
+                                        Sign In
+                                    </Link>
                                 </Typography>
 
                                 <Typography>
@@ -216,7 +222,8 @@ const Navbar = () => {
                                     <MenuItem
                                         onClick={() => {
                                             signOut({
-                                                callbackUrl: env.baseURL,
+                                                callbackUrl:
+                                                    env.baseURL + asPath,
                                             });
                                         }}
                                     >

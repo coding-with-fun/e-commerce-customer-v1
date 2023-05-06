@@ -16,7 +16,7 @@ const authenticatedPage = (
         }
 
         if (status === 'unauthenticated') {
-            const url = encodeURIComponent(env.baseURL + asPath);
+            const url = env.baseURL + asPath;
             push(`/auth/signin?callbackUrl=${url}`);
             return;
         }

@@ -10,8 +10,9 @@ import { Box } from '@mui/material';
 import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { productListResponse } from './api/product/list';
+import { PageLoader } from '@/HOC/AppWrapper';
 
 const Home = ({ data }: { data: productListApiResponse }) => {
     const { data: session } = useSession();
@@ -19,6 +20,8 @@ const Home = ({ data }: { data: productListApiResponse }) => {
     const dispatch = useAppDispatch();
 
     const { message, products: resProducts, success } = data;
+
+    const [processingProducts, setProcessingProducts] = useState(true);
 
     useEffect(() => {
         const data = [];
@@ -48,6 +51,8 @@ const Home = ({ data }: { data: productListApiResponse }) => {
             })
         );
 
+        setProcessingProducts(false);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resProducts, session]);
 
@@ -56,7 +61,7 @@ const Home = ({ data }: { data: productListApiResponse }) => {
         return <NoProduct />;
     }
 
-    if (!products.length) {
+    if (!products.length && !processingProducts) {
         return <NoProduct />;
     }
 
@@ -66,21 +71,26 @@ const Home = ({ data }: { data: productListApiResponse }) => {
                 <title>Home</title>
             </Head>
 
-            <Box
-                sx={{
-                    width: '100%',
-                    maxWidth: 'calc(100vw - 48px)',
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(330px, 1fr))',
-                    gap: '1rem',
-                    columnGap: '1rem',
-                    marginX: 'auto',
-                }}
-            >
-                {products.map((product) => {
-                    return <Product key={product.id} product={product} />;
-                })}
-            </Box>
+            {processingProducts ? (
+                <PageLoader />
+            ) : (
+                <Box
+                    sx={{
+                        width: '100%',
+                        maxWidth: 'calc(100vw - 48px)',
+                        display: 'grid',
+                        gridTemplateColumns:
+                            'repeat(auto-fit, minmax(330px, 1fr))',
+                        gap: '1rem',
+                        columnGap: '1rem',
+                        marginX: 'auto',
+                    }}
+                >
+                    {products.map((product) => {
+                        return <Product key={product.id} product={product} />;
+                    })}
+                </Box>
+            )}
 
             <ScrollToTop />
         </Fragment>
