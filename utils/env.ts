@@ -10,6 +10,12 @@ const env = {
         cartKey: process.env
             .NEXT_PUBLIC_REDUX_LOCAL_STORAGE_STORE_KEY as string,
     },
+
+    stripe: {
+        publishableKey: process.env
+            .NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string,
+        secretKey: process.env.STRIPE_SECRET_KEY as string,
+    },
 };
 
 export default env;

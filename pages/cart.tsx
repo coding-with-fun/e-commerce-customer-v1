@@ -1,7 +1,12 @@
+import { Box, Button } from '@mui/material';
 import React from 'react';
 
 const Cart = () => {
-    return <div>Cart</div>;
+    return (
+        <Box>
+            <Button>Check out</Button>
+        </Box>
+    );
 };
 
 export default Cart;
