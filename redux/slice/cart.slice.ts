@@ -1,7 +1,7 @@
+import env from '@/utils/env';
 import { createSlice } from '@reduxjs/toolkit';
 import _ from 'lodash';
 import { RootState } from '../store';
-import env from '@/utils/env';
 
 export interface IInitialData {
     cartData: {
@@ -81,6 +81,24 @@ const CartSlice = createSlice({
                 );
             }
         },
+
+        setProductToCart: (state, action) => {
+            const productID = _.get(action, 'payload.productID');
+            const productQuantity = _.get(action, 'payload.productQuantity');
+
+            if (productID) {
+                if (productQuantity) {
+                    state.cartData[productID] = productQuantity;
+                } else {
+                    delete state.cartData[productID];
+                }
+
+                localStorage.setItem(
+                    env.redux.cartKey,
+                    JSON.stringify(state.cartData)
+                );
+            }
+        },
     },
 });
 
@@ -89,6 +107,7 @@ export const {
     setCartFromAPI,
     addProductToCart,
     removeProductFromCart,
+    setProductToCart,
 } = CartSlice.actions;
 
 export const cart = (state: RootState): IInitialData => state.cart;

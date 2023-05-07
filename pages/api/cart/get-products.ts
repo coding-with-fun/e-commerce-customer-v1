@@ -1,10 +1,9 @@
 import prisma from '@/libs/prisma';
 import response from '@/libs/response';
 import requestValidator from '@/middlewares/requestValidator';
+import { product, seller } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from 'next-auth';
 import z from 'zod';
-import { authOptions } from '../auth/[...nextauth]';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -19,23 +18,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const {
             body: { id },
         } = parsedData;
-
-        const session = await getServerSession(req, res, authOptions);
-        if (!session) {
-            res.statusCode = 401;
-            throw new Error('You are not authenticated.');
-        }
-        const userID = +session.user.id;
-
-        const customer = await prisma.customer.findFirst({
-            where: {
-                id: userID,
-            },
-        });
-        if (!customer) {
-            res.statusCode = 400;
-            throw new Error('Customer not found with the given ID.');
-        }
 
         const products = await prisma.product.findMany({
             where: {
@@ -72,3 +54,7 @@ const schema = z.object({
 });
 
 export type productToggleFavoriteSchemaType = z.infer<typeof schema>;
+
+export type cartProduct = product & {
+    seller: seller | null;
+};
