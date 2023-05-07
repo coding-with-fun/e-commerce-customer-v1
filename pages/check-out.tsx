@@ -25,21 +25,26 @@ export default function App() {
             body: JSON.stringify({ items: [{ id: 'xl-tshirt' }] }),
         })
             .then((res) => res.json())
-            .then((data) => setClientSecret(data.clientSecret));
+            .then((data) => setClientSecret(data.clientSecret as string));
     }, []);
 
     const appearance: Appearance = {
         theme: 'stripe',
     };
-    const options: StripeElementsOptions = {
-        clientSecret,
+    const options = {
         appearance,
     };
 
     return (
         <div className="App">
             {clientSecret && (
-                <Elements options={options} stripe={stripePromise}>
+                <Elements
+                    options={{
+                        clientSecret,
+                    }}
+                    stripe={stripePromise}
+                    key={clientSecret}
+                >
                     <CheckoutForm />
                 </Elements>
             )}
