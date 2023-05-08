@@ -1,53 +1,75 @@
 import React from 'react';
-import {
-    Appearance,
-    StripeElementsOptions,
-    loadStripe,
-} from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-import CheckoutForm from '@/components/CheckOut/CheckoutForm';
 
-// Make sure to call loadStripe outside of a component’s render to avoid
-// recreating the Stripe object on every render.
-// This is your test publishable API key.
-const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-);
+function loadScript(src: string) {
+    return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+            resolve(true);
+        };
+        script.onerror = () => {
+            resolve(false);
+        };
+        document.body.appendChild(script);
+    });
+}
 
-export default function App() {
-    const [clientSecret, setClientSecret] = React.useState('');
+const CheckOut = () => {
+    async function displayRazorpay() {
+        const res = await loadScript(
+            'https://checkout.razorpay.com/v1/checkout.js'
+        );
 
-    React.useEffect(() => {
-        // Create PaymentIntent as soon as the page loads
-        fetch('/api/create-payment-intent', {
+        if (!res) {
+            alert('Razorpay SDK failed to load. Are you online?');
+            return;
+        }
+
+        const data = await fetch('http://localhost:3000/api/razorpay', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items: [{ id: 'xl-tshirt' }] }),
-        })
-            .then((res) => res.json())
-            .then((data) => setClientSecret(data.clientSecret as string));
-    }, []);
+        }).then((t) => t.json());
 
-    const appearance: Appearance = {
-        theme: 'stripe',
-    };
-    const options = {
-        appearance,
-    };
+        console.log(data);
+
+        const options = {
+            key: 'rzp_test_EAchXsA0atVJwd',
+            currency: data.currency,
+            amount: data.amount.toString(),
+            order_id: data.id,
+            name: 'Donation',
+            description: 'Thank you for nothing. Please give us some money',
+            image: 'http://localhost:1337/logo.svg',
+            handler: function (response: any) {
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature);
+            },
+            prefill: {
+                name,
+                email: 'sdfdsjfh2@ndsfdf.com',
+                phone_number: '9899999999',
+            },
+        };
+        const paymentObject = new (window as any).Razorpay(options);
+        paymentObject.open();
+    }
 
     return (
-        <div className="App">
-            {clientSecret && (
-                <Elements
-                    options={{
-                        clientSecret,
-                    }}
-                    stripe={stripePromise}
-                    key={clientSecret}
-                >
-                    <CheckoutForm />
-                </Elements>
-            )}
+        <div>
+            CheckOut
+            <p>
+                Edit <code>src/App.js</code> and save to reload.
+            </p>
+            <a
+                className="App-link"
+                onClick={displayRazorpay}
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Donate $5
+            </a>
         </div>
     );
-}
+};
+
+export default CheckOut;
