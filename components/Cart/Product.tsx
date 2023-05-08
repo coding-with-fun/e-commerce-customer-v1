@@ -1,9 +1,9 @@
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import toast from '@/libs/toast';
 import { cartProduct } from '@/pages/api/cart/get-products';
 import { setProductToCart } from '@/redux/slice/cart.slice';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import RemoveIcon from '@mui/icons-material/Remove';
 import {
     Box,
@@ -13,6 +13,7 @@ import {
     Typography,
 } from '@mui/material';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
@@ -123,21 +124,30 @@ const Product = ({ product }: IProps) => {
                         />
                     </Box>
 
-                    <Box className="pr-16 max-w-xs">
-                        <Typography>{product.seller?.name}</Typography>
-
-                        <Typography className="product-title">
-                            {product.title}
+                    <Box className="pr-16 max-w-[300px]">
+                        <Typography className="text-xs">
+                            {product.seller?.name}
                         </Typography>
 
-                        <Typography>Rs. {product.price}</Typography>
+                        <Link
+                            href={`/product/${productSlug}`}
+                            className="hover:underline"
+                        >
+                            <Typography className="product-title font-semibold mt-1 mb-2">
+                                {product.title}
+                            </Typography>
+                        </Link>
+
+                        <Typography className="text-sm">
+                            Rs. {product.price}
+                        </Typography>
                     </Box>
                 </Box>
             </td>
 
             <td className="w-[250px]">
                 <Box className="flex items-center">
-                    <Box className="flex items-center border border-black border-solid w-fit">
+                    <Box className="flex items-center border border-[#28282B] border-solid w-fit">
                         <ButtonBase
                             className="w-11 h-11 flex cursor-pointer"
                             onClick={() => {
@@ -176,7 +186,7 @@ const Product = ({ product }: IProps) => {
                 </Box>
             </td>
 
-            <td className="text-right">
+            <td className="text-right w-[150px]">
                 <Box>
                     <Typography>
                         Rs. {cartData[product.id] * product.price}

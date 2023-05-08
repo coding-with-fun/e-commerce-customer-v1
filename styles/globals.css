@@ -38,3 +38,11 @@
     width: 20px;
     border-radius: 50%;
 }
+
+.cart-table thead tr th {
+    padding-bottom: 1rem;
+}
+
+.cart-table tbody tr td {
+    padding: 1rem 0;
+}

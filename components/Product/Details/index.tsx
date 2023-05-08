@@ -8,17 +8,25 @@ import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ShareIcon from '@mui/icons-material/Share';
-import { Box, ButtonBase, InputBase, Typography } from '@mui/material';
+import {
+    Box,
+    ButtonBase,
+    InputBase,
+    Skeleton,
+    Typography,
+} from '@mui/material';
 import { signIn, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { ChangeEvent, Fragment, useState } from 'react';
+import { ChangeEvent, Fragment, useEffect, useState } from 'react';
 
 const Details = ({ product }: IProps) => {
     const { asPath } = useRouter();
     const session = useSession();
     const dispatch = useAppDispatch();
     const { cartData } = useAppSelector((state) => state.cart);
+
+    const [isImageLoading, setIsImageLoading] = useState(true);
 
     const [itemsToAddInCart, setItemsToAddInCart] = useState(1);
     const [isShareLinkAlertOpen, setIsShareLinkAlertOpen] = useState(false);
@@ -70,6 +78,14 @@ const Details = ({ product }: IProps) => {
         }
     };
 
+    useEffect(() => {
+        const loadImage = setTimeout(() => {
+            setIsImageLoading(false);
+        }, 2000);
+
+        return () => clearTimeout(loadImage);
+    }, []);
+
     return (
         <Fragment>
             <Box className="flex flex-col gap-8 py-16 md:flex-row md:justify-center">
@@ -83,6 +99,17 @@ const Details = ({ product }: IProps) => {
                         sizes="160px"
                         style={{
                             objectFit: 'contain',
+                            display: isImageLoading ? 'none' : 'block',
+                        }}
+                    />
+
+                    <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={'100%'}
+                        sx={{
+                            display: isImageLoading ? 'block' : 'none',
+                            marginX: 'auto',
                         }}
                     />
                 </Box>
@@ -115,7 +142,7 @@ const Details = ({ product }: IProps) => {
                             Quantity
                         </Typography>
 
-                        <Box className="flex items-center border border-black border-solid w-fit">
+                        <Box className="flex items-center border border-[#28282B] border-solid w-fit">
                             <ButtonBase
                                 className="w-11 h-11 flex cursor-pointer"
                                 onClick={() => {
@@ -145,7 +172,7 @@ const Details = ({ product }: IProps) => {
                         </Box>
 
                         <ButtonBase
-                            className="w-full h-12 flex justify-center items-center border border-black border-solid cursor-pointer mt-3"
+                            className="w-full h-12 flex justify-center items-center border border-[#28282B] border-solid cursor-pointer mt-3"
                             onClick={handleProductToCart}
                         >
                             <Typography>Add to cart</Typography>
@@ -174,7 +201,7 @@ const Details = ({ product }: IProps) => {
                             </Box>
                         ) : null}
 
-                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-black border-solid bg-black text-white cursor-pointer mt-4">
+                        <ButtonBase className="w-full h-12 flex justify-center items-center border border-[#28282B] border-solid bg-[#28282B] text-white cursor-pointer mt-4">
                             <Typography>Buy it now</Typography>
                         </ButtonBase>
                     </Box>

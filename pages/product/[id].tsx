@@ -47,9 +47,7 @@ const Product = ({ data }: { data: productDetailsApiResponse }) => {
                 <title>{product.title}</title>
             </Head>
 
-            <Box>
-                <Details product={product} />
-            </Box>
+            <Details product={product} />
         </Fragment>
     ) : (
         <PageLoader />

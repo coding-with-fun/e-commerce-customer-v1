@@ -87,7 +87,7 @@ const Product = ({ product }: IProps) => {
                     <Box
                         sx={{
                             position: 'absolute',
-                            bgcolor: 'black',
+                            bgcolor: '#28282B',
                             opacity: '30%',
                             top: 0,
                             bottom: 0,
