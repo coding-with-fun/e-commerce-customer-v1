@@ -3,11 +3,10 @@ import ProductsList from '@/components/Cart/ProductsList';
 import { useAppSelector } from '@/hooks/redux';
 import axiosInstance from '@/libs/interceptor';
 import toast from '@/libs/toast';
-import { Box } from '@mui/material';
-import { useEffect, useState, Fragment } from 'react';
+import Head from 'next/head';
+import { Fragment, useEffect, useState } from 'react';
 import useSWRMutation from 'swr/mutation';
 import { cartProduct } from './api/cart/get-products';
-import Head from 'next/head';
 
 const Cart = () => {
     const { cartData } = useAppSelector((state) => state.cart);
