@@ -12,7 +12,7 @@ const Subtotal = ({ products }: IProps) => {
             return (
                 prev +
                 (cartData[current.id]
-                    ? current.price * cartData[current.id]
+                    ? current.price * cartData[current.id].cartQuantity
                     : 0)
             );
         }, 0);

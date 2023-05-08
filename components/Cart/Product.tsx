@@ -26,7 +26,9 @@ const Product = ({ product }: IProps) => {
 
     const [isImageLoading, setIsImageLoading] = useState(true);
 
-    const [quantity, setQuantity] = useState(cartData[product.id]);
+    const [quantity, setQuantity] = useState(
+        cartData[product.id]?.cartQuantity ?? 0
+    );
     const changeInQuantity = useRef(false);
 
     const handleChangeItemsInCart = (e: ChangeEvent<HTMLInputElement>) => {
@@ -189,7 +191,7 @@ const Product = ({ product }: IProps) => {
             <td className="text-right w-[150px]">
                 <Box>
                     <Typography>
-                        Rs. {cartData[product.id] * product.price}
+                        Rs. {cartData[product.id].cartQuantity * product.price}
                     </Typography>
                 </Box>
             </td>

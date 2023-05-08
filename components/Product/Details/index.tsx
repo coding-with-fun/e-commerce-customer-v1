@@ -63,7 +63,10 @@ const Details = ({ product }: IProps) => {
     };
 
     const handleProductToCart = () => {
-        if ((cartData[product.id] ?? 0) + itemsToAddInCart > product.quantity) {
+        if (
+            (cartData[product.id]?.cartQuantity ?? 0) + itemsToAddInCart >
+            product.quantity
+        ) {
             toast(
                 `The vendor has only ${product.quantity} of the quantity available.`
             );
@@ -71,7 +74,7 @@ const Details = ({ product }: IProps) => {
         } else {
             dispatch(
                 addProductToCart({
-                    productID: product.id,
+                    product: product,
                     productQuantity: itemsToAddInCart,
                 })
             );

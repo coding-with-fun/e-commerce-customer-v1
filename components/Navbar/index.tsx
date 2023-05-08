@@ -35,10 +35,9 @@ const Navbar = () => {
     };
 
     const totalCartQuantity = useMemo(() => {
-        return Object.values(cartData).reduce(
-            (prev, current) => prev + current,
-            0
-        );
+        return Object.values(cartData).reduce((prev, current) => {
+            return prev + current.cartQuantity;
+        }, 0);
     }, [cartData]);
 
     useEffect(() => {

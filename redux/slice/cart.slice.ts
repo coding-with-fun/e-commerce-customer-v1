@@ -2,10 +2,13 @@ import env from '@/utils/env';
 import { createSlice } from '@reduxjs/toolkit';
 import _ from 'lodash';
 import { RootState } from '../store';
+import { productListResponse } from '@/pages/api/product/list';
 
 export interface IInitialData {
     cartData: {
-        [id: string]: number;
+        [id: string]: productListResponse & {
+            cartQuantity: number;
+        };
     };
 }
 
@@ -39,16 +42,19 @@ const CartSlice = createSlice({
         },
 
         addProductToCart: (state, action) => {
-            const productID = _.get(action, 'payload.productID');
+            const product = _.get(action, 'payload.product');
             const productQuantity = _.get(action, 'payload.productQuantity');
 
-            if (productID && productQuantity) {
-                const cartQuantity = state.cartData[productID];
+            if (product.id && productQuantity) {
+                const cartItem = state.cartData[product.id];
 
-                if (!cartQuantity) {
-                    state.cartData[productID] = productQuantity;
+                if (!cartItem) {
+                    state.cartData[product.id] = {
+                        ...product,
+                        cartQuantity: productQuantity,
+                    };
                 } else {
-                    state.cartData[productID] += productQuantity;
+                    state.cartData[product.id].cartQuantity += productQuantity;
                 }
 
                 localStorage.setItem(
@@ -63,12 +69,12 @@ const CartSlice = createSlice({
             const productQuantity = _.get(action, 'payload.productQuantity');
 
             if (productID) {
-                const cartQuantity = state.cartData[productID];
+                const cartItem = state.cartData[productID];
 
-                if (cartQuantity > 1) {
-                    state.cartData[productID] -= productQuantity;
+                if (cartItem.cartQuantity > 1) {
+                    cartItem.cartQuantity -= productQuantity;
 
-                    if (state.cartData[productID] < 1) {
+                    if (cartItem.cartQuantity < 1) {
                         delete state.cartData[productID];
                     }
                 } else {
@@ -88,7 +94,7 @@ const CartSlice = createSlice({
 
             if (productID) {
                 if (productQuantity) {
-                    state.cartData[productID] = productQuantity;
+                    state.cartData[productID].cartQuantity = productQuantity;
                 } else {
                     delete state.cartData[productID];
                 }
