@@ -1,23 +1,12 @@
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 const AppWrapper = ({ children }: IProps) => {
-    const { data: session, status } = useSession();
     const { events } = useRouter();
 
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        console.log('--------------------------------------------');
-        console.log('Session data is');
-        console.log({
-            session,
-        });
-        console.log('--------------------------------------------');
-    }, [session]);
 
     useEffect(() => {
         const disableLoaderTimeout = setTimeout(() => {
@@ -46,7 +35,7 @@ const AppWrapper = ({ children }: IProps) => {
         };
     }, [events]);
 
-    if (status === 'loading' || loading) {
+    if (loading) {
         return <PageLoader />;
     }
 
