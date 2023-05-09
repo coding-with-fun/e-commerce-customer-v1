@@ -9,8 +9,16 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         await prisma.customer.deleteMany();
-        await prisma.customer.create({
+        await prisma.cart.deleteMany();
+
+        const customer = await prisma.customer.create({
             data: CUSTOMER,
+        });
+        await prisma.cart.create({
+            data: {
+                customerId: customer.id,
+                cartId: Date.now().toString(),
+            },
         });
 
         return response(res, {
