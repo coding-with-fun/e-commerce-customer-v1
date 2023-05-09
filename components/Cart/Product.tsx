@@ -126,7 +126,7 @@ const Product = ({ product }: IProps) => {
                         />
                     </Box>
 
-                    <Box className="pr-16 max-w-[300px]">
+                    <Box className="pr-16 min-w-[200px] max-w-[750px]">
                         <Typography className="text-xs">
                             {product.seller?.name}
                         </Typography>

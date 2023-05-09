@@ -1,8 +1,9 @@
-import Header from '@/components/CheckOut/Header';
+import CheckOutLeft from '@/components/CheckOut/CheckOutLeft';
+import CheckOutRight from '@/components/CheckOut/CheckOutRight';
 import { useAppSelector } from '@/hooks/redux';
-import Head from 'next/head';
-import React, { Fragment, useEffect } from 'react';
 import { Box } from '@mui/material';
+import Head from 'next/head';
+import { Fragment, useEffect } from 'react';
 
 const CheckOut = () => {
     const { cartData } = useAppSelector((state) => state.cart);
@@ -17,9 +18,10 @@ const CheckOut = () => {
                 <title>Checkout</title>
             </Head>
 
-            <Fragment>
-                <Header />
-            </Fragment>
+            <Box className="flex px-[4rem]">
+                <CheckOutLeft />
+                <CheckOutRight />
+            </Box>
         </Fragment>
     );
 };
