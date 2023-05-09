@@ -39,7 +39,7 @@ const AppWrapper = ({ children }: IProps) => {
         return <PageLoader />;
     }
 
-    return <Box className="h-screen">{children}</Box>;
+    return <Box>{children}</Box>;
 };
 
 export default AppWrapper;

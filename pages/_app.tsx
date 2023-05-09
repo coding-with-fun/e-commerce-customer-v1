@@ -37,7 +37,7 @@ const App = ({
                             theme="light"
                         />
 
-                        <main className="p-4 pt-20 h-full">
+                        <main className="p-4 pt-20 h-full min-h-screen">
                             <Component {...pageProps} />
                         </main>
                     </AppWrapper>
