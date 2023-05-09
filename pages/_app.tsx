@@ -1,5 +1,4 @@
 import AppWrapper from '@/HOC/AppWrapper';
-import Navbar from '@/components/Navbar';
 import store from '@/redux/store';
 import theme from '@/styles/theme';
 import createEmotionCache from '@/utils/createEmotionCache';
@@ -30,7 +29,6 @@ const App = ({
                         refetchOnWindowFocus={false}
                     >
                         <CssBaseline />
-                        <Navbar />
                         <AppWrapper>
                             <ToastContainer
                                 position="top-right"
